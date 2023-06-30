@@ -1,12 +1,16 @@
+const generateData = require('../component/result');
 const Item = require('../models/blogModel');
 
 // Get all items
 const getAllItems = async (req, res) => {
   try {
     const items = await Item.find();
-    res.json(items);
+    const jsonData = generateData(200,1,"data found","no error",items);
+    res.status(200).json(jsonData);
+    // res.json(items);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    const jsonData = generateData(500,0,"Data not found","User data us not found",{ error: err.message });
+    res.status(500).json(jsonData);
   }
 };
 
@@ -16,11 +20,14 @@ const getOneItem = async (req, res) => {
     const itemId = req.params.id;
     const item = await Item.findById(itemId);
     if (!item) {
-      return res.status(404).json({ error: 'Item not found' });
+      const jsonData = generateData(200,1,"data not found","Item not found");
+      return res.status(404).json(jsonData);
     }
-    res.json(item);
+    const jsonData = generateData(200,1,"data found","no error",item);
+    res.status(200).json(jsonData);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    const jsonData = generateData(500,0,"Data not found",{ error: err.message });
+    res.status(500).json(jsonData);
   }
 };
 
@@ -32,7 +39,8 @@ const createItem = async (req, res) => {
     const savedItem = await newItem.save();
     res.status(201).json(savedItem);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    const jsonData = generateData(500,0,"Data not found",{ error: err.message });
+    res.status(500).json(jsonData);
   }
 };
 
@@ -47,7 +55,8 @@ const updateItem = async (req, res) => {
     }
     res.json(updatedItem);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    const jsonData = generateData(500,0,"Data not found",{ error: err.message });
+    res.status(500).json(jsonData);
   }
 };
 
@@ -61,7 +70,8 @@ const deleteItem = async (req, res) => {
     }
     res.json({ message: 'Item deleted successfully' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    const jsonData = generateData(500,0,"Data not found",{ error: err.message });
+    res.status(500).json(jsonData);
   }
 };
 
